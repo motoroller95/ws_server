@@ -1,21 +1,11 @@
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/ip/host_name.hpp>
+#include "ws_server.h"
+#include <exception>
 #include <iostream>
 
-using namespace boost::asio;
-using namespace boost::asio::ip;
-
-io_service ioservice;
-tcp::resolver resolv{ioservice};
-
-int main() {
-  tcp::resolver::query query{boost::asio::ip::host_name(), ""};
-  tcp::resolver::iterator it = resolv.resolve(query);
-  while(it != tcp::resolver::iterator()) {
-    std::cout << boost::asio::ip::host_name() << " : " << (it++)->endpoint().address();
+int main(int argc, const char **argv) {
+  try {
+    WsServer::run(argc, argv);
+  } catch (std::exception& e) {
+    std::cerr << "Error: " << e.what() << std::endl;
   }
-
-  std::cout << std::endl;
-  ioservice.run();
 }
